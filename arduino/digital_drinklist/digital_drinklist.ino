@@ -17,7 +17,6 @@ String registerUsersId = "4920DBA3";
 
 File users;
 File drinkList;
-File newUsers;
 
 void setup() {
   Serial.begin(9600);   // Initialize serial communications with the PC
@@ -112,8 +111,6 @@ String getNameFromUid(String uid){
   String row = "";
   String userId = "";
   String userName = "NOUSER";
-  String userNameToReturn;
-  bool userIdInDB = false;
   while (users.available() != 0){
     row = users.readStringUntil('\n');
     if (row == ""){
@@ -148,51 +145,24 @@ bool doesUserNeedRegistering(String uid){
     Serial.println("Error opening users.txt");
     return false;  
   }
+  String row = "";
   String userId = "";
-  bool userIdInDB = false;
+  bool userInDB = true;
   while (users.available() != 0){
-    userId = users.readStringUntil('\n');
-    if (userId == ""){
+    row = users.readStringUntil('\n');
+    if (row == ""){
       break;  
     }
-    userId.trim();
+
+    userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
-      userIdInDB = true;
+      userInDB = false;
       break;
     }
   }
   users.close();
-
-  if (userIdInDB) {
-    return false;  
-  }
-
-  Serial.println("READING NEWUSERS");
-  newUsers = SD.open("newusers.txt", FILE_READ);
-
-  if (!newUsers) {
-    Serial.println("Error opening newusers.txt");
-    return false;  
-  }
-  String nUserId = "";
-  bool userIdInNewUsers = false;
-  while (newUsers.available() != 0){
-    nUserId = newUsers.readStringUntil('\n');
-    if (nUserId == ""){
-      break;  
-    }
-    nUserId.trim();
-    Serial.println("MATCHIN WITH: " + nUserId + "from " + uid);
-    
-    if (uid.equalsIgnoreCase(nUserId)) {
-      Serial.println("MATCH");
-      userIdInNewUsers = true;
-      break;
-    }
-  }
-  newUsers.close();
   
-  return !userIdInNewUsers;
+  return userInDB;
 }
 
 void registerDrink(String userName) {
@@ -214,18 +184,18 @@ void registerDrink(String userName) {
 
 void registerNewUser(String uid) {
   Serial.println("REGISTER USER: " + uid);
-  drinkList = SD.open("newusers.txt", FILE_WRITE);
+  users = SD.open("users.txt", FILE_WRITE);
 
   // if the file opened okay, write to it:
-  if (drinkList) {
-    Serial.print("Writing to newusers.txt...");
-    drinkList.println(uid);
+  if (users) {
+    Serial.print("Writing to users.txt...");
+    users.println(uid + ":");
     // close the file:
-    drinkList.close();
+    users.close();
     Serial.println("done.");
   } else {
     // if the file didn't open, print an error:
-    Serial.println("error opening newusers.txt");
+    Serial.println("error opening users.txt");
   }
 }
 
