@@ -5,8 +5,8 @@
 #define SD_SS_PIN       4   // SD CARD
 #define RST_PIN         9   // RFID
 #define RFID_SS_PIN     8   // RFID
-#define LED_RED         2
-#define LED_GREEN       3
+#define LED_RED         3
+#define LED_GREEN       2
 #define LED_BLUE        5
 #define pulldowndelay   50
 #define afterScanDelay  3000

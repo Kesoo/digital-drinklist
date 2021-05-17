@@ -38,8 +38,8 @@ Keso
 
 |   Arduino PIN |   Component   |   SD Reader PIN   |   RFID PIN    |   LED         |
 |   ---         |   ---         |   ---             |   ---         |   ---         |
-|   D2          |   330 ohm     |                   |               |   RED_LED     |
-|   D3          |   330 ohm     |                   |               |   GREEN_LED   |
+|   D2          |   330 ohm     |                   |               |   GREEN_LED   |
+|   D3          |   330 ohm     |                   |               |   RED_LED     |
 |   D4          |               |   CS              |               |               |
 |   D5          |   330 ohm     |                   |               |   BLUE_LED    |
 |   D8          |               |                   |   SDA         |               |
@@ -54,8 +54,8 @@ Keso
 
 ## LED's
 
-* RED_LED: PIN D2 -> 330 ohm resistor -> long leg -> short leg -> ground
-* GREEN_LED: PIN D3 -> 330 ohm resistor -> long leg -> short leg -> ground
+* GREEN_LED: PIN D2 -> 330 ohm resistor -> long leg -> short leg -> ground
+* RED_LED: PIN D3 -> 330 ohm resistor -> long leg -> short leg -> ground
 * BLUE_LED: PIN D5 -> 330 ohm resistor -> long leg -> short leg -> ground
 
 ## SD Card Reader
