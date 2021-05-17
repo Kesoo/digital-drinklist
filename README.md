@@ -3,14 +3,14 @@
 ## Hardware
 
 * Arduino Nano
-* Unknown SD Card reader
+* SD Card reader
 * RFID-RC522
 * Indicator LED's
 
 ## Software
 
 ### Arduino
-Arduino C++ code that listnens for RFID cards and checks their ID against the database of users on the SD card.
+Arduino C++ code that listens for RFID cards and checks their ID against the database of users on the SD card.
 When a registered user scans their card enter their name in the `DRINKS.TXT` document on the SD Card.
 
 ### Java
