@@ -7,10 +7,16 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 
-public class Controller {
+public class OpenFileController {
 
     @FXML
     public Button openFileButton;
+
+    private DrinkCounter drinkCounter;
+
+    public OpenFileController() {
+        this.drinkCounter = new DrinkCounter();
+    }
 
     public void openFileAction(ActionEvent event){
         FileChooser fileChooser = new FileChooser();
@@ -20,6 +26,7 @@ public class Controller {
 
         if (selectedFile != null) {
             System.out.println(selectedFile.toString());
+            drinkCounter.countDrinks(selectedFile);
         }
     }
 }
