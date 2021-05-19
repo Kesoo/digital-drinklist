@@ -2,6 +2,9 @@
 
 ## Hardware
 
+<img src="./assets/DSC02176.jpg" alt="Image of hardware" width="300"/>
+
+
 ![Image of hardware](./assets/DSC02176.jpg "Digital drinklist")
 
 * Arduino Nano
