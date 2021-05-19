@@ -7,7 +7,8 @@
 ### Components
 
 * Arduino Nano
-* SD Card reader
+* Micro SD Card reader
+* 4GB Micro SD card
 * RFID-RC522
 * 3x Indicator LED's (Red, Green, Blue)
 * 3x 330 ohm resistors
