@@ -4,6 +4,8 @@
 
 <img src="./assets/DSC02176.jpg" alt="Image of hardware" width="300"/>
 
+### Components
+
 * Arduino Nano
 * SD Card reader
 * RFID-RC522
@@ -34,9 +36,9 @@ Holger
 Keso
 ```
 
-# Board pinout
+## Board pinout
 
-## Arduino PINS used
+### Arduino PINS used
 
 |   Arduino PIN |   Component   |   SD Reader PIN   |   RFID PIN    |   LED         |
 |   ---         |   ---         |   ---             |   ---         |   ---         |
@@ -54,13 +56,13 @@ Keso
 |   3.3V        |               |                   |   3.3V        |               |
 |   5V          |               |   VCC             |               |               |
 
-## LED's
+### LED's
 
 * GREEN_LED: PIN D2 -> 330 ohm resistor -> long leg -> short leg -> ground
 * RED_LED: PIN D3 -> 330 ohm resistor -> long leg -> short leg -> ground
 * BLUE_LED: PIN D5 -> 330 ohm resistor -> long leg -> short leg -> ground
 
-## SD Card Reader
+### SD Card Reader
 
 |   SD Reader PIN   |  Component|   Arduino PIN     |
 |   ---             |   ---     |   ---             |
@@ -71,7 +73,7 @@ Keso
 |   SCK             |           |   D13             |
 |   CS              |           |   D4              |
 
-## RFID Reader
+### RFID Reader
 
 |   RFID PIN    |   Arduino PIN |
 |   ---         |   ---         |
