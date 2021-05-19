@@ -9,7 +9,9 @@
 * Arduino Nano
 * SD Card reader
 * RFID-RC522
-* Indicator LED's
+* 3x Indicator LED's (Red, Green, Blue)
+* 3x 330 ohm resistors
+* 1x 220 ohm resistor
 
 ## Software
 
