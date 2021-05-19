@@ -2,6 +2,8 @@
 
 ## Hardware
 
+![Image of hardware](./assets/DSC02176.jpg "Digital drinklist")
+
 * Arduino Nano
 * SD Card reader
 * RFID-RC522
