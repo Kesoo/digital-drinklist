@@ -23,12 +23,12 @@ String registerUsersId = "4920DBA3";
 /**
  * File handle of `users.txt`.
  */
-File users;
+File users = nullptr;
 
 /**
  * File handle of `drinks.txt`.
  */
-File drinkList;
+File drinkList = nullptr;
 
 /**
  * Program initialization.
