@@ -13,11 +13,24 @@
 
 MFRC522 mfrc522(RFID_SS_PIN, RST_PIN);  // Create MFRC522 (RFID) instance
 
+/**
+ * Identifier (UID) of administrative RFID tag.
+ */
 String registerUsersId = "4920DBA3";
 
+/**
+ * File handle of `users.txt`.
+ */
 File users;
+
+/**
+ * File handle of `drinks.txt`.
+ */
 File drinkList;
 
+/**
+ * Program initialization.
+ */
 void setup() {
   Serial.begin(9600);   // Initialize serial communications with the PC
   while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
@@ -56,6 +69,9 @@ void setup() {
   rfidSPI();
 }
 
+/**
+ * Program main loop.
+ */
 void loop() {
   digitalWrite(LED_RED, LOW);
   digitalWrite(LED_GREEN, LOW);
@@ -87,11 +103,30 @@ void loop() {
   delay(afterScanDelay);
 }
 
+/**
+ * Wait until card with readable UID is present on RFID sensor.
+ */
 void waitForRFIDCard() {
   // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
   while (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial());
 }
 
+/**
+ * Return the hexadecimal string representation of a buffer.
+ *
+ * Output representation is encoded in upper case ASCII.
+ *
+ * @param buffer     Buffer to convert.
+ * @param bufferSize Size of buffer in bytes.
+ * @return           Hexadecimal representation of buffer.
+ *
+ * Example:
+ * ```cpp
+ * byte *buffer = (byte *) "Foobar";
+ * String repr = getUid(buffer, sizeof buffer);
+ * assert(repr == "0F6F6F626172");
+ * ```
+ */
 String getUid(byte *buffer, byte bufferSize) {
   String byteArray;
   for (byte i = 0; i < bufferSize; i++) {
@@ -101,6 +136,12 @@ String getUid(byte *buffer, byte bufferSize) {
   return byteArray;
 }
 
+/**
+ * Resolve a user's name from a UID.
+ *
+ * @param uid Identifier (UID) to resolve.
+ * @return    Name of user belonging to identifier.
+ */
 String getNameFromUid(String uid) {
   users = SD.open("users.txt", FILE_READ);
 
@@ -135,6 +176,12 @@ String getNameFromUid(String uid) {
   return userName;
 }
 
+/**
+ * Check if user is registered in database.
+ *
+ * @param uid Identifier (UID) of user to query.
+ * @return    Presence of user in database.
+ */
 bool doesUserNeedRegistering(String uid) {
   users = SD.open("users.txt", FILE_READ);
 
@@ -161,6 +208,11 @@ bool doesUserNeedRegistering(String uid) {
   return userInDB;
 }
 
+/**
+ * Log a new ticket for a user.
+ *
+ * @param userName Identifier (UID) of user to log ticket for.
+ */
 void registerDrink(String userName) {
   Serial.println("REGISTER DRINK: " + userName);
   drinkList = SD.open("drinks.txt", FILE_WRITE);
@@ -178,6 +230,11 @@ void registerDrink(String userName) {
   }
 }
 
+/**
+ * Register new user in persistent database.
+ *
+ * @param uid Identifier (UID) of new user.
+ */
 void registerNewUser(String uid) {
   Serial.println("REGISTER USER: " + uid);
   users = SD.open("users.txt", FILE_WRITE);
@@ -195,6 +252,9 @@ void registerNewUser(String uid) {
   }
 }
 
+/**
+ * Enable reading of SD card.
+ */
 void sdCardSPI() {
   Serial.println("Listening to SD reader");
   digitalWrite(SD_SS_PIN, LOW);
@@ -202,6 +262,9 @@ void sdCardSPI() {
   delay(pulldowndelay);
 }
 
+/**
+ * Enable reading of RFID sensor.
+ */
 void rfidSPI() {
   Serial.println("Listening to RFID reader");
   digitalWrite(SD_SS_PIN, HIGH);
@@ -209,6 +272,9 @@ void rfidSPI() {
   delay(pulldowndelay);
 }
 
+/**
+ * Enable reading of SD card and RFID sensor.
+ */
 void noSPI() {
   Serial.println("Listening to no SPI reader");
   digitalWrite(SD_SS_PIN, HIGH);
@@ -216,6 +282,13 @@ void noSPI() {
   delay(pulldowndelay);
 }
 
+/**
+ * Register RFID identities.
+ *
+ * Routine awaits activation of the RFID sensor. New UIDs presented to
+ * the sensor are registered in the database. When the administration UID is
+ * used, the routine exits. LED animations are performed during the routine.
+ */
 void registerUserMode() {
   bool inRUM = true;
   blinkLEDs();
@@ -251,6 +324,12 @@ void registerUserMode() {
   return;
 }
 
+/**
+ * Cycle all LEDs twice a second, for a duration of two and a half seconds.
+ *
+ * Red and green LEDs are activated, followed by a double cycle of LEDs cycling
+ * off and on. At the end of the routine, all LEDs are active.
+ */
 void blinkLEDs() {
   digitalWrite(LED_RED, HIGH);
   digitalWrite(LED_GREEN, HIGH);
@@ -273,6 +352,20 @@ void blinkLEDs() {
   delay(500);
 }
 
+/**
+ * Extract the N:th segment of a delimited sting.
+ *
+ * @param data      String to search.
+ * @param separator Segment separator. Usually not present in output.
+ * @param index     Segment to extract, starting from `0`.
+ * @return          A copy of the substring, of `""` on no match.
+ *
+ * Example:
+ * ```cpp
+ * String segment = getValue("foo,bar,baz,quux", ',', 2);
+ * assert(segment == "baz");
+ * ```
+ */
 String getValue(String data, char separator, int index) {
   int found = 0;
   int strIndex[] = { 0, -1 };
