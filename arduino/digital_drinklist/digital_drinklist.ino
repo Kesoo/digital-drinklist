@@ -23,17 +23,17 @@ void setup() {
   while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
 
   // LED SETUP
-  pinMode(LED_RED,OUTPUT);
-  pinMode(LED_GREEN,OUTPUT);
-  pinMode(LED_BLUE,OUTPUT);
-  digitalWrite(LED_RED,LOW);
-  digitalWrite(LED_GREEN,LOW);
-  digitalWrite(LED_BLUE,HIGH);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_BLUE, OUTPUT);
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_BLUE, HIGH);
 
   // SPI SETUP
   SPI.begin();
-  pinMode(SD_SS_PIN,OUTPUT);
-  pinMode(RFID_SS_PIN,OUTPUT);
+  pinMode(SD_SS_PIN, OUTPUT);
+  pinMode(RFID_SS_PIN, OUTPUT);
   noSPI();
 
   // RFID SETUP
@@ -57,21 +57,21 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(LED_RED,LOW);
-  digitalWrite(LED_GREEN,LOW);
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, LOW);
 
   waitForRFIDCard();
 
   String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
   currentUid.trim();
 
-  if (registerUsersId.equalsIgnoreCase(currentUid)){
+  if (registerUsersId.equalsIgnoreCase(currentUid)) {
     registerUserMode();
     return;
   }
 
-  digitalWrite(LED_RED,HIGH);
-  digitalWrite(LED_GREEN,HIGH);
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, HIGH);
 
   sdCardSPI();
   Serial.println("Current Uid: " + currentUid);
@@ -87,9 +87,9 @@ void loop() {
   delay(afterScanDelay);
 }
 
-void waitForRFIDCard(){
+void waitForRFIDCard() {
   // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
-  while(!mfrc522.PICC_IsNewCardPresent() || ! mfrc522.PICC_ReadCardSerial());
+  while (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial());
 }
 
 String getUid(byte *buffer, byte bufferSize) {
@@ -101,7 +101,7 @@ String getUid(byte *buffer, byte bufferSize) {
   return byteArray;
 }
 
-String getNameFromUid(String uid){
+String getNameFromUid(String uid) {
   users = SD.open("users.txt", FILE_READ);
 
   if (!users) {
@@ -111,9 +111,9 @@ String getNameFromUid(String uid){
   String row = "";
   String userId = "";
   String userName = "NOUSER";
-  while (users.available() != 0){
+  while (users.available() != 0) {
     row = users.readStringUntil('\n');
-    if (row == ""){
+    if (row == "") {
       break;
     }
 
@@ -130,15 +130,15 @@ String getNameFromUid(String uid){
 
   // Toggle LED's
   if (userName != "NOUSER") {
-    digitalWrite(LED_RED,LOW);
+    digitalWrite(LED_RED, LOW);
   } else {
-    digitalWrite(LED_GREEN,LOW);
+    digitalWrite(LED_GREEN, LOW);
   }
 
   return userName;
 }
 
-bool doesUserNeedRegistering(String uid){
+bool doesUserNeedRegistering(String uid) {
   users = SD.open("users.txt", FILE_READ);
 
   if (!users) {
@@ -148,9 +148,9 @@ bool doesUserNeedRegistering(String uid){
   String row = "";
   String userId = "";
   bool userInDB = true;
-  while (users.available() != 0){
+  while (users.available() != 0) {
     row = users.readStringUntil('\n');
-    if (row == ""){
+    if (row == "") {
       break;
     }
 
@@ -223,17 +223,17 @@ void noSPI() {
 void registerUserMode() {
   bool inRUM = true;
   blinkLEDs();
-  digitalWrite(LED_BLUE,LOW);
-  while(inRUM) {
+  digitalWrite(LED_BLUE, LOW);
+  while (inRUM) {
     rfidSPI();
-    digitalWrite(LED_RED,HIGH);
-    digitalWrite(LED_GREEN,HIGH);
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
     waitForRFIDCard();
 
     String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
     currentUid.trim();
 
-    if (registerUsersId.equalsIgnoreCase(currentUid)){
+    if (registerUsersId.equalsIgnoreCase(currentUid)) {
       inRUM = false;
       continue;
     }
@@ -241,11 +241,11 @@ void registerUserMode() {
     sdCardSPI();
 
     if (doesUserNeedRegistering(currentUid)) {
-      digitalWrite(LED_RED,LOW);
+      digitalWrite(LED_RED, LOW);
       registerNewUser(currentUid);
       delay(afterScanDelay);
     } else {
-      digitalWrite(LED_GREEN,LOW);
+      digitalWrite(LED_GREEN, LOW);
       delay(afterScanDelay);
     }
   }
@@ -256,39 +256,39 @@ void registerUserMode() {
 }
 
 void blinkLEDs() {
-  digitalWrite(LED_RED,HIGH);
-  digitalWrite(LED_GREEN,HIGH);
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, HIGH);
   delay(500);
-  digitalWrite(LED_BLUE,LOW);
-  digitalWrite(LED_RED,LOW);
-  digitalWrite(LED_GREEN,LOW);
+  digitalWrite(LED_BLUE, LOW);
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, LOW);
   delay(500);
-  digitalWrite(LED_BLUE,HIGH);
-  digitalWrite(LED_RED,HIGH);
-  digitalWrite(LED_GREEN,HIGH);
+  digitalWrite(LED_BLUE, HIGH);
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, HIGH);
   delay(500);
-  digitalWrite(LED_BLUE,LOW);
-  digitalWrite(LED_RED,LOW);
-  digitalWrite(LED_GREEN,LOW);
+  digitalWrite(LED_BLUE, LOW);
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_GREEN, LOW);
   delay(500);
-  digitalWrite(LED_BLUE,HIGH);
-  digitalWrite(LED_RED,HIGH);
-  digitalWrite(LED_GREEN,HIGH);
+  digitalWrite(LED_BLUE, HIGH);
+  digitalWrite(LED_RED, HIGH);
+  digitalWrite(LED_GREEN, HIGH);
   delay(500);
 }
 
 String getValue(String data, char separator, int index) {
   int found = 0;
-  int strIndex[] = {0, -1};
-  int maxIndex = data.length()-1;
+  int strIndex[] = { 0, -1 };
+  int maxIndex = data.length() - 1;
 
-  for(int i=0; i<=maxIndex && found<=index; i++){
-    if(data.charAt(i)==separator || i==maxIndex){
+  for (int i = 0; i <= maxIndex && found <= index; i++) {
+    if (data.charAt(i) == separator || i == maxIndex) {
       found++;
-      strIndex[0] = strIndex[1]+1;
-      strIndex[1] = (i == maxIndex) ? i+1 : i;
+      strIndex[0] = strIndex[1] + 1;
+      strIndex[1] = (i == maxIndex) ? i + 1 : i;
     }
   }
 
-  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }

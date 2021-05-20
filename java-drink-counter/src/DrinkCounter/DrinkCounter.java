@@ -7,19 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DrinkCounter {
-
     private final Map<String,Integer> combinedDrinks;
 
-    public DrinkCounter(){
+    public DrinkCounter() {
         combinedDrinks = new HashMap<>();
     }
 
-    public String createDrinklist(File drinkFile) throws IOException{
+    public String createDrinklist(File drinkFile) throws IOException {
         Map<String, Integer> drinkMap = countDrinks(drinkFile);
         return createOutputFile(drinkMap);
     }
 
-    private Map<String,Integer> countDrinks(File drinkFile) throws IOException{
+    private Map<String,Integer> countDrinks(File drinkFile) throws IOException {
         System.out.println("COUNT DRINKS");
         FileReader fileReader = new FileReader(drinkFile);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -28,7 +27,7 @@ public class DrinkCounter {
         while ((line = bufferedReader.readLine()) != null) {
             line = line.trim();
             if (combinedDrinks.containsKey(line)) {
-                combinedDrinks.replace(line, combinedDrinks.get(line)+1);
+                combinedDrinks.replace(line, combinedDrinks.get(line) + 1);
             } else {
                 combinedDrinks.put(line, 1);
             }
@@ -39,12 +38,12 @@ public class DrinkCounter {
         return combinedDrinks;
     }
 
-    private String createOutputFile(Map<String,Integer> combinedDrinks) throws IOException{
+    private String createOutputFile(Map<String,Integer> combinedDrinks) throws IOException {
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm"));
         String fileName = now + "-strecklista.txt";
         System.out.println("CREATED: " + fileName);
         File outputFile = new File(fileName);
-        if (outputFile.createNewFile()){
+        if (outputFile.createNewFile()) {
 
             FileWriter fileWriter = new FileWriter(outputFile);
             fileWriter.append("Strecklista genererad: ").append(now).append("\n");
