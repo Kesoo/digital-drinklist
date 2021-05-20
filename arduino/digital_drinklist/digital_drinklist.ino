@@ -46,7 +46,7 @@ void setup() {
   // SD CARD SETUP
   sdCardSPI();
   Serial.print("Initializing SD card...");
-  
+
   if (!SD.begin(SD_SS_PIN)) {
     Serial.println("initialization failed!");
     while (1);
@@ -59,9 +59,9 @@ void setup() {
 void loop() {
   digitalWrite(LED_RED,LOW);
   digitalWrite(LED_GREEN,LOW);
-  
+
   waitForRFIDCard();
-  
+
   String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
   currentUid.trim();
 
@@ -72,7 +72,7 @@ void loop() {
 
   digitalWrite(LED_RED,HIGH);
   digitalWrite(LED_GREEN,HIGH);
-  
+
   sdCardSPI();
   Serial.println("Current Uid: " + currentUid);
   String userName = getNameFromUid(currentUid);
@@ -127,7 +127,7 @@ String getNameFromUid(String uid){
     }
   }
   users.close();
-  
+
   // Toggle LED's
   if (userName != "NOUSER") {
     digitalWrite(LED_RED,LOW);
@@ -161,7 +161,7 @@ bool doesUserNeedRegistering(String uid){
     }
   }
   users.close();
-  
+
   return userInDB;
 }
 
@@ -232,12 +232,12 @@ void registerUserMode() {
 
     String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
     currentUid.trim();
-  
+
     if (registerUsersId.equalsIgnoreCase(currentUid)){
       inRUM = false;
       continue;
     }
-    
+
     sdCardSPI();
 
     if (doesUserNeedRegistering(currentUid)) {
