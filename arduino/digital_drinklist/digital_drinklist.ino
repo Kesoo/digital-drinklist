@@ -318,7 +318,6 @@ void registerUserMode() {
   rfidSPI();
   blinkLEDs();
   delay(500);
-  return;
 }
 
 /**
