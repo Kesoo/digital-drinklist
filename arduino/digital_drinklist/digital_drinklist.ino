@@ -34,10 +34,11 @@ static File drinkList = nullptr;
  * Program initialization.
  */
 void setup() {
+  // Setup serial interface.
   Serial.begin(9600);   // Initialize serial communications with the PC
   while (!Serial);    // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
 
-  // LED SETUP
+  // Setup LED actuators.
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
   pinMode(LED_BLUE, OUTPUT);
@@ -45,29 +46,31 @@ void setup() {
   digitalWrite(LED_GREEN, LOW);
   digitalWrite(LED_BLUE, HIGH);
 
-  // SPI SETUP
+  // Setup SPI interface.
   SPI.begin();
   pinMode(SD_SS_PIN, OUTPUT);
   pinMode(RFID_SS_PIN, OUTPUT);
   noSPI();
 
-  // RFID SETUP
+  // Setup RFID reader.
   rfidSPI();
   Serial.print("Initializing RFID reader...");
   mfrc522.PCD_Init();   // Init MFRC522
   delay(4);       // Optional delay. Some board do need more time after init to be ready, see Readme
   //mfrc522.PCD_DumpVersionToSerial();  // Show details of PCD - MFRC522 Card Reader details
 
-  // SD CARD SETUP
+  // Setup SD card.
   sdCardSPI();
   Serial.print("Initializing SD card...");
 
+  // Verify correct initialization.
   if (!SD.begin(SD_SS_PIN)) {
     Serial.println("initialization failed!");
     while (1);
   }
   Serial.println("initialization done.");
 
+  // Enable RFID sensor.
   rfidSPI();
 }
 
@@ -75,25 +78,33 @@ void setup() {
  * Program main loop.
  */
 void loop() {
+  // ...
   digitalWrite(LED_RED, LOW);
   digitalWrite(LED_GREEN, LOW);
 
+  // Await positive readback from RFID reader.
   waitForRFIDCard();
 
+  // Read UID from RFID sensor.
   auto currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
   currentUid.trim();
 
+  // Recognize administrative UID.
   if (registerUsersId.equalsIgnoreCase(currentUid)) {
     registerUserMode();
     return;
   }
 
+  // ...
   digitalWrite(LED_RED, HIGH);
   digitalWrite(LED_GREEN, HIGH);
 
+  // Resolve UID.
   sdCardSPI();
   Serial.println("Current Uid: " + currentUid);
   const auto userName = getNameFromUid(currentUid);
+
+  // Register ticket.
   if (userName != "NOUSER") {
     Serial.println("USER FOUND");
     registerDrink(userName);
@@ -101,6 +112,7 @@ void loop() {
     Serial.println("NO USER FOUND");
   }
 
+  // Delay next scan.
   rfidSPI();
   delay(afterScanDelay);
 }
@@ -109,7 +121,7 @@ void loop() {
  * Wait until card with readable UID is present on RFID sensor.
  */
 void waitForRFIDCard() {
-  // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
+  // Block until a card or a serial number can be detected over RFID.
   while (!mfrc522.PICC_IsNewCardPresent() || !mfrc522.PICC_ReadCardSerial());
 }
 
@@ -130,6 +142,7 @@ void waitForRFIDCard() {
  * ```
  */
 String getUid(const byte *buffer, const byte bufferSize) {
+  // Construct output string, byte-by-byte.
   String byteArray;
   for (byte i = 0; i < bufferSize; i++) {
     byteArray.concat(String(buffer[i], HEX));
@@ -145,31 +158,42 @@ String getUid(const byte *buffer, const byte bufferSize) {
  * @return    Name of user belonging to identifier.
  */
 String getNameFromUid(const String uid) {
-  users = SD.open("users.txt", FILE_READ);
-
+  // Current resolved username.
   String userName = "NOUSER";
 
+  // Open database for reading.
+  users = SD.open("users.txt", FILE_READ);
   if (!users) {
     Serial.println("Error opening users.txt");
     return userName;
   }
 
+  // Search database.
   while (users.available() != 0) {
+    // Read a single entry.
     const auto row = users.readStringUntil('\n');
+
+    // Skip empty lines.
     if (row == "")
       break;
 
+    // Read the UID field of entry.
     const auto userId = getValue(row, ':', 0);
+
+    // Filter by UID.
     if (uid.equalsIgnoreCase(userId)) {
+      // Resolve username of entry.
       userName = getValue(row, ':', 1);
       userName.trim();
       if (userName.equalsIgnoreCase(""))
         userName = "NOUSER";
     }
   }
+
+  // Close database.
   users.close();
 
-  // Toggle LED's
+  // Update LEDs.
   if (userName != "NOUSER")
     digitalWrite(LED_RED, LOW);
   else
@@ -185,25 +209,34 @@ String getNameFromUid(const String uid) {
  * @return    Presence of user in database.
  */
 bool doesUserNeedRegistering(const String uid) {
+  // Open database for reading.
   users = SD.open("users.txt", FILE_READ);
-
   if (!users) {
     Serial.println("Error opening users.txt");
     return false;
   }
 
+  // Find UID in database.
   bool userInDB = true;
   while (users.available() != 0) {
+    // Read a single entry.
     const auto row = users.readStringUntil('\n');
+
+    // Skip empty lines.
     if (row == "")
       break;
 
+    // Read the UID field of entry.
     const auto userId = getValue(row, ':', 0);
+
+    // Compare against needle.
     if (uid.equalsIgnoreCase(userId)) {
       userInDB = false;
       break;
     }
   }
+
+  // Close database.
   users.close();
 
   return userInDB;
@@ -216,20 +249,22 @@ bool doesUserNeedRegistering(const String uid) {
  */
 void registerDrink(const String userName) {
   Serial.println("REGISTER DRINK: " + userName);
-  drinkList = SD.open("drinks.txt", FILE_WRITE);
-  userName.trim();
 
+  // Open log.
+  drinkList = SD.open("drinks.txt", FILE_WRITE);
   if (!drinkList) {
-    // if the file didn't open, print an error:
     Serial.println("error opening drinks.txt");
     return;
   }
 
-  // if the file opened okay, write to it:
+  // Append to log.
   Serial.print("Writing to drinks.txt...");
+  userName.trim();
   drinkList.println(userName);
-  // close the file:
+
+  // Close the log.
   drinkList.close();
+
   Serial.println("done.");
 }
 
@@ -240,19 +275,21 @@ void registerDrink(const String userName) {
  */
 void registerNewUser(const String uid) {
   Serial.println("REGISTER USER: " + uid);
-  users = SD.open("users.txt", FILE_WRITE);
 
+  // Open database for writing.
+  users = SD.open("users.txt", FILE_WRITE);
   if (!users) {
-    // if the file didn't open, print an error:
     Serial.println("error opening users.txt");
     return;
   }
 
-  // if the file opened okay, write to it:
+  // Append to database.
   Serial.print("Writing to users.txt...");
   users.println(uid + ":");
-  // close the file:
+
+  // Close database.
   users.close();
+
   Serial.println("done.");
 }
 
@@ -260,6 +297,7 @@ void registerNewUser(const String uid) {
  * Enable reading of SD card.
  */
 void sdCardSPI() {
+  // Configure pins for SD card reader.
   Serial.println("Listening to SD reader");
   digitalWrite(SD_SS_PIN, LOW);
   digitalWrite(RFID_SS_PIN, HIGH);
@@ -270,6 +308,7 @@ void sdCardSPI() {
  * Enable reading of RFID sensor.
  */
 void rfidSPI() {
+  // Configure pins for RFID reader.
   Serial.println("Listening to RFID reader");
   digitalWrite(SD_SS_PIN, HIGH);
   digitalWrite(RFID_SS_PIN, LOW);
@@ -280,6 +319,7 @@ void rfidSPI() {
  * Enable reading of SD card and RFID sensor.
  */
 void noSPI() {
+  // Configure pins neither reader.
   Serial.println("Listening to no SPI reader");
   digitalWrite(SD_SS_PIN, HIGH);
   digitalWrite(RFID_SS_PIN, HIGH);
@@ -294,8 +334,11 @@ void noSPI() {
  * used, the routine exits. LED animations are performed during the routine.
  */
 void registerUserMode() {
+  // Perform LED sequence.
   blinkLEDs();
   digitalWrite(LED_BLUE, LOW);
+
+  // Process UIDs.
   while (1) {
     rfidSPI();
     digitalWrite(LED_RED, HIGH);
@@ -319,7 +362,11 @@ void registerUserMode() {
       delay(afterScanDelay);
     }
   }
+
+  // Restore state.
   rfidSPI();
+
+  // Indicate before returning to previous mode.
   blinkLEDs();
   delay(500);
 }
@@ -372,13 +419,17 @@ String getValue(const String data, const char separator, const size_t index) {
   const size_t maxIndex = data.length() - 1;
   // TODO: assert(maxIndex <= SIZE_MAX);
 
+  // Scan input buffer.
   for (size_t i = 0; i <= maxIndex && found <= index; i++) {
+    // Search for delimiter.
     if (data.charAt(i) == separator || i == maxIndex) {
+      // Store data of current segment.
       found++;
       strIndex[0] = strIndex[1] + 1;
       strIndex[1] = (i == maxIndex) ? i + 1 : i;
     }
   }
 
+  // Return segment if found.
   return (found > index) ? data.substring(strIndex[0], strIndex[1]) : "";
 }
