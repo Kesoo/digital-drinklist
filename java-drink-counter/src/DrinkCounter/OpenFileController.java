@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 
 public class OpenFileController {
-
     @FXML
     public Button openFileButton;
 
@@ -28,7 +27,6 @@ public class OpenFileController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT Files", "*.TXT"));
 
         File selectedFile = fileChooser.showOpenDialog(null);
-
 
         if (selectedFile == null) {
             responseLabel.setText("An error occurred: No file selected");
