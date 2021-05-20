@@ -1,6 +1,8 @@
 #include <MFRC522.h>
 #include <SD.h>
 #include <SPI.h>
+#include <cstddef>
+#include <cstdint>
 
 #define SD_SS_PIN       4   // SD CARD
 #define RST_PIN         9   // RFID
@@ -362,12 +364,12 @@ void blinkLEDs() {
  * assert(segment == "baz");
  * ```
  */
-String getValue(String data, char separator, int index) {
-  int found = 0;
-  int strIndex[] = { 0, -1 };
-  int maxIndex = data.length() - 1;
+String getValue(String data, char separator, size_t index) {
+  uintmax_t found = 0;
+  ssize_t strIndex[] = { 0, -1 };
+  size_t maxIndex = data.length() - 1;
 
-  for (int i = 0; i <= maxIndex && found <= index; i++) {
+  for (size_t i = 0; i <= maxIndex && found <= index; i++) {
     if (data.charAt(i) == separator || i == maxIndex) {
       found++;
       strIndex[0] = strIndex[1] + 1;
