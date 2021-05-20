@@ -1,6 +1,6 @@
-#include <SPI.h>
 #include <MFRC522.h>
 #include <SD.h>
+#include <SPI.h>
 
 #define SD_SS_PIN       4   // SD CARD
 #define RST_PIN         9   // RFID
