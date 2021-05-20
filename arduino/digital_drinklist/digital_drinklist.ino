@@ -113,27 +113,24 @@ String getNameFromUid(String uid) {
   String userName = "NOUSER";
   while (users.available() != 0) {
     row = users.readStringUntil('\n');
-    if (row == "") {
+    if (row == "")
       break;
-    }
 
     userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userName = getValue(row, ':', 1);
       userName.trim();
-      if (userName.equalsIgnoreCase("")) {
+      if (userName.equalsIgnoreCase(""))
         userName = "NOUSER";
-      }
     }
   }
   users.close();
 
   // Toggle LED's
-  if (userName != "NOUSER") {
+  if (userName != "NOUSER")
     digitalWrite(LED_RED, LOW);
-  } else {
+  else
     digitalWrite(LED_GREEN, LOW);
-  }
 
   return userName;
 }
@@ -150,9 +147,8 @@ bool doesUserNeedRegistering(String uid) {
   bool userInDB = true;
   while (users.available() != 0) {
     row = users.readStringUntil('\n');
-    if (row == "") {
+    if (row == "")
       break;
-    }
 
     userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
