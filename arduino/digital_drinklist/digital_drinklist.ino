@@ -290,5 +290,5 @@ String getValue(String data, char separator, int index) {
     }
   }
 
-  return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+  return (found > index) ? data.substring(strIndex[0], strIndex[1]) : "";
 }
