@@ -147,13 +147,15 @@ String getUid(byte *buffer, byte bufferSize) {
 String getNameFromUid(String uid) {
   users = SD.open("users.txt", FILE_READ);
 
+  String userName = "NOUSER";
+
   if (!users) {
     Serial.println("Error opening users.txt");
-    return "NOUSER";
+    return userName;
   }
+
   String row = "";
   String userId = "";
-  String userName = "NOUSER";
   while (users.available() != 0) {
     row = users.readStringUntil('\n');
     if (row == "")
