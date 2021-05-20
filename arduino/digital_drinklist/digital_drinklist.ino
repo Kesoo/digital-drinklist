@@ -370,6 +370,7 @@ String getValue(String data, char separator, size_t index) {
   uintmax_t found = 0;
   ssize_t strIndex[] = { 0, -1 };
   size_t maxIndex = data.length() - 1;
+  // TODO: assert(maxIndex <= SIZE_MAX);
 
   for (size_t i = 0; i <= maxIndex && found <= index; i++) {
     if (data.charAt(i) == separator || i == maxIndex) {
