@@ -290,10 +290,9 @@ void noSPI() {
  * used, the routine exits. LED animations are performed during the routine.
  */
 void registerUserMode() {
-  bool inRUM = true;
   blinkLEDs();
   digitalWrite(LED_BLUE, LOW);
-  while (inRUM) {
+  while (1) {
     rfidSPI();
     digitalWrite(LED_RED, HIGH);
     digitalWrite(LED_GREEN, HIGH);
@@ -302,10 +301,8 @@ void registerUserMode() {
     String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
     currentUid.trim();
 
-    if (registerUsersId.equalsIgnoreCase(currentUid)) {
-      inRUM = false;
-      continue;
-    }
+    if (registerUsersId.equalsIgnoreCase(currentUid))
+      break;
 
     sdCardSPI();
 
