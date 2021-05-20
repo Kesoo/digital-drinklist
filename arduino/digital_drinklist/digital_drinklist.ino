@@ -18,17 +18,17 @@ MFRC522 mfrc522(RFID_SS_PIN, RST_PIN);  // Create MFRC522 (RFID) instance
 /**
  * Identifier (UID) of administrative RFID tag.
  */
-String registerUsersId = "4920DBA3";
+static String registerUsersId = "4920DBA3";
 
 /**
  * File handle of `users.txt`.
  */
-File users = nullptr;
+static File users = nullptr;
 
 /**
  * File handle of `drinks.txt`.
  */
-File drinkList = nullptr;
+static File drinkList = nullptr;
 
 /**
  * Program initialization.
