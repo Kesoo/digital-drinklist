@@ -80,11 +80,11 @@ void loop() {
     Serial.println("USER FOUND");
     registerDrink(userName);
   } else {
-    Serial.println("NO USER FOUND"); 
+    Serial.println("NO USER FOUND");
   }
 
   rfidSPI();
-  delay(afterScanDelay);  
+  delay(afterScanDelay);
 }
 
 void waitForRFIDCard(){
@@ -106,7 +106,7 @@ String getNameFromUid(String uid){
 
   if (!users) {
     Serial.println("Error opening users.txt");
-    return "NOUSER";  
+    return "NOUSER";
   }
   String row = "";
   String userId = "";
@@ -114,7 +114,7 @@ String getNameFromUid(String uid){
   while (users.available() != 0){
     row = users.readStringUntil('\n');
     if (row == ""){
-      break;  
+      break;
     }
 
     userId = getValue(row, ':', 0);
@@ -122,7 +122,7 @@ String getNameFromUid(String uid){
       userName = getValue(row, ':', 1);
       userName.trim();
       if (userName.equalsIgnoreCase("")) {
-        userName = "NOUSER";  
+        userName = "NOUSER";
       }
     }
   }
@@ -143,7 +143,7 @@ bool doesUserNeedRegistering(String uid){
 
   if (!users) {
     Serial.println("Error opening users.txt");
-    return false;  
+    return false;
   }
   String row = "";
   String userId = "";
@@ -151,7 +151,7 @@ bool doesUserNeedRegistering(String uid){
   while (users.available() != 0){
     row = users.readStringUntil('\n');
     if (row == ""){
-      break;  
+      break;
     }
 
     userId = getValue(row, ':', 0);
@@ -246,7 +246,7 @@ void registerUserMode() {
       delay(afterScanDelay);
     } else {
       digitalWrite(LED_GREEN,LOW);
-      delay(afterScanDelay);  
+      delay(afterScanDelay);
     }
   }
   rfidSPI();
