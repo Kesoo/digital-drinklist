@@ -20,6 +20,17 @@
 Arduino C++ code that listens for RFID cards and checks their ID against the database of users on the SD card.
 When a registered user scans their card enter their name in the `DRINKS.TXT` document on the SD Card.
 
+#### __"Normal" mode__
+
+The digital drink list is automatically in normal mode on startup. In normal operating mode the digital drink list will register drinks when a user scan their RFID card, if that card is registered in the `USERS.TXT` document.
+
+#### __Add users__
+
+To add a user a specific "register user" rfid card card must be used, once the "register user"-card has been scanned the indicator lights will blink, and then the blue LED will turn off. This means that the drink list is in registration mode.
+
+Once in registration mode scan the the card that should be added to the `USERS.TXT` file, if the card is not yet in this list, the card Id will be added as a new line `cardId:`. To complete the registration a name has to be added manually to the `USERS.TXT` file. When registration is complete the line in `USERS.TXT` should look like `cardId:name`.
+
+
 ### Java
 Java program with a GUI to use the `DRINKS.TXT` file to generate a summary of all the logged drinks and present them in a readable way.
 
