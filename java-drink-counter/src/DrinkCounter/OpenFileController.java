@@ -24,7 +24,8 @@ public class OpenFileController {
 
     public void openFileAction(ActionEvent event){
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT Files", "*.TXT"));
+        fileChooser.getExtensionFilters()
+                   .add(new FileChooser.ExtensionFilter("TXT Files", "*.TXT"));
 
         File selectedFile = fileChooser.showOpenDialog(null);
 

@@ -18,21 +18,26 @@
 
 ### Arduino
 
-Arduino C++ code that listens for RFID cards and checks their ID against the database of users on the SD card.
-When a registered user scans their card enter their name in the `DRINKS.TXT` document on the SD Card.
+Arduino C++ code that listens for RFID cards and checks their ID against
+the database of users on the SD card. When a registered user scans their card
+enter their name in the `DRINKS.TXT` document on the SD Card.
 
 ### Java
 
-Java program with a GUI to use the `DRINKS.TXT` file to generate a summary of all the logged drinks and present them in a readable way.
+Java program with a GUI to use the `DRINKS.TXT` file to generate a summary of
+all the logged drinks and present them in a readable way.
 
 ## SD Card File structure
 
 The SD Card contains two important files, `DRINKS.TXT` and `USERS.TXT`.
 
-`USERS.TXT` contains all the registered users that are able to use the digital drinklist, each user is represented by their own line in the `USERS.TXT` file, formatted as `{userId}:{userName}`. Example: `12345:Holger`
+`USERS.TXT` contains all the registered users that are able to use the digital
+drinklist, each user is represented by their own line in the `USERS.TXT` file,
+formatted as `{userId}:{userName}`. Example: `12345:Holger`
 
-`DRINKS.TXT` contains all the logged drinks where each drink registered is represented by a line in the file. Formatted as `{userName}`.
-Example of a `DRINKS.TXT` file where Holger has registered two drinks and Keso one:
+`DRINKS.TXT` contains all the logged drinks where each drink registered is
+represented by a line in the file. Formatted as `{userName}`. Example of
+a `DRINKS.TXT` file where Holger has registered two drinks and Keso one:
 
 ```
 Holger

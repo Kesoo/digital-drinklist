@@ -44,12 +44,14 @@ public class DrinkCounter {
         System.out.println("CREATED: " + fileName);
         File outputFile = new File(fileName);
         if (outputFile.createNewFile()) {
-
             FileWriter fileWriter = new FileWriter(outputFile);
             fileWriter.append("Strecklista genererad: ").append(now).append("\n");
             fileWriter.append("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
             for (Map.Entry<String, Integer> person : combinedDrinks.entrySet()) {
-                fileWriter.append(person.getKey()).append(": ").append(person.getValue().toString()).append("\n");
+                fileWriter.append(person.getKey())
+                          .append(": ")
+                          .append(person.getValue().toString())
+                          .append("\n");
             }
             fileWriter.close();
         } else {
