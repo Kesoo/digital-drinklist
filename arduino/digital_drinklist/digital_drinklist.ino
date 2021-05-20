@@ -218,17 +218,19 @@ void registerDrink(String userName) {
   Serial.println("REGISTER DRINK: " + userName);
   drinkList = SD.open("drinks.txt", FILE_WRITE);
   userName.trim();
-  // if the file opened okay, write to it:
-  if (drinkList) {
-    Serial.print("Writing to drinks.txt...");
-    drinkList.println(userName);
-    // close the file:
-    drinkList.close();
-    Serial.println("done.");
-  } else {
+
+  if (!drinkList) {
     // if the file didn't open, print an error:
     Serial.println("error opening drinks.txt");
+    return;
   }
+
+  // if the file opened okay, write to it:
+  Serial.print("Writing to drinks.txt...");
+  drinkList.println(userName);
+  // close the file:
+  drinkList.close();
+  Serial.println("done.");
 }
 
 /**
@@ -240,17 +242,18 @@ void registerNewUser(String uid) {
   Serial.println("REGISTER USER: " + uid);
   users = SD.open("users.txt", FILE_WRITE);
 
-  // if the file opened okay, write to it:
-  if (users) {
-    Serial.print("Writing to users.txt...");
-    users.println(uid + ":");
-    // close the file:
-    users.close();
-    Serial.println("done.");
-  } else {
+  if (!users) {
     // if the file didn't open, print an error:
     Serial.println("error opening users.txt");
+    return;
   }
+
+  // if the file opened okay, write to it:
+  Serial.print("Writing to users.txt...");
+  users.println(uid + ":");
+  // close the file:
+  users.close();
+  Serial.println("done.");
 }
 
 /**
