@@ -154,8 +154,8 @@ String getNameFromUid(String uid) {
     return userName;
   }
 
-  String row = "";
-  String userId = "";
+  String row;
+  String userId;
   while (users.available() != 0) {
     row = users.readStringUntil('\n');
     if (row == "")
@@ -193,8 +193,8 @@ bool doesUserNeedRegistering(String uid) {
     Serial.println("Error opening users.txt");
     return false;
   }
-  String row = "";
-  String userId = "";
+  String row;
+  String userId;
   bool userInDB = true;
   while (users.available() != 0) {
     row = users.readStringUntil('\n');
