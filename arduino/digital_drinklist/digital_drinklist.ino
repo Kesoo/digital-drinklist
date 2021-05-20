@@ -154,14 +154,12 @@ String getNameFromUid(String uid) {
     return userName;
   }
 
-  String row;
-  String userId;
   while (users.available() != 0) {
-    row = users.readStringUntil('\n');
+    String row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    userId = getValue(row, ':', 0);
+    String userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userName = getValue(row, ':', 1);
       userName.trim();
@@ -193,15 +191,14 @@ bool doesUserNeedRegistering(String uid) {
     Serial.println("Error opening users.txt");
     return false;
   }
-  String row;
-  String userId;
+
   bool userInDB = true;
   while (users.available() != 0) {
-    row = users.readStringUntil('\n');
+    String row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    userId = getValue(row, ':', 0);
+    String userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userInDB = false;
       break;
