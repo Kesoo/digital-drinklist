@@ -18,7 +18,7 @@ MFRC522 mfrc522(RFID_SS_PIN, RST_PIN);  // Create MFRC522 (RFID) instance
 /**
  * Identifier (UID) of administrative RFID tag.
  */
-static String registerUsersId = "4920DBA3";
+static const String registerUsersId = "4920DBA3";
 
 /**
  * File handle of `users.txt`.
@@ -93,7 +93,7 @@ void loop() {
 
   sdCardSPI();
   Serial.println("Current Uid: " + currentUid);
-  auto userName = getNameFromUid(currentUid);
+  const auto userName = getNameFromUid(currentUid);
   if (userName != "NOUSER") {
     Serial.println("USER FOUND");
     registerDrink(userName);
@@ -129,7 +129,7 @@ void waitForRFIDCard() {
  * assert(repr == "0F6F6F626172");
  * ```
  */
-String getUid(byte *buffer, byte bufferSize) {
+String getUid(const byte *buffer, const byte bufferSize) {
   String byteArray;
   for (byte i = 0; i < bufferSize; i++) {
     byteArray.concat(String(buffer[i], HEX));
@@ -144,7 +144,7 @@ String getUid(byte *buffer, byte bufferSize) {
  * @param uid Identifier (UID) to resolve.
  * @return    Name of user belonging to identifier.
  */
-String getNameFromUid(String uid) {
+String getNameFromUid(const String uid) {
   users = SD.open("users.txt", FILE_READ);
 
   String userName = "NOUSER";
@@ -155,11 +155,11 @@ String getNameFromUid(String uid) {
   }
 
   while (users.available() != 0) {
-    auto row = users.readStringUntil('\n');
+    const auto row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    auto userId = getValue(row, ':', 0);
+    const auto userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userName = getValue(row, ':', 1);
       userName.trim();
@@ -184,7 +184,7 @@ String getNameFromUid(String uid) {
  * @param uid Identifier (UID) of user to query.
  * @return    Presence of user in database.
  */
-bool doesUserNeedRegistering(String uid) {
+bool doesUserNeedRegistering(const String uid) {
   users = SD.open("users.txt", FILE_READ);
 
   if (!users) {
@@ -194,11 +194,11 @@ bool doesUserNeedRegistering(String uid) {
 
   bool userInDB = true;
   while (users.available() != 0) {
-    auto row = users.readStringUntil('\n');
+    const auto row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    auto userId = getValue(row, ':', 0);
+    const auto userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userInDB = false;
       break;
@@ -214,7 +214,7 @@ bool doesUserNeedRegistering(String uid) {
  *
  * @param userName Identifier (UID) of user to log ticket for.
  */
-void registerDrink(String userName) {
+void registerDrink(const String userName) {
   Serial.println("REGISTER DRINK: " + userName);
   drinkList = SD.open("drinks.txt", FILE_WRITE);
   userName.trim();
@@ -238,7 +238,7 @@ void registerDrink(String userName) {
  *
  * @param uid Identifier (UID) of new user.
  */
-void registerNewUser(String uid) {
+void registerNewUser(const String uid) {
   Serial.println("REGISTER USER: " + uid);
   users = SD.open("users.txt", FILE_WRITE);
 
@@ -366,10 +366,10 @@ void blinkLEDs() {
  * assert(segment == "baz");
  * ```
  */
-String getValue(String data, char separator, size_t index) {
+String getValue(const String data, const char separator, const size_t index) {
   uintmax_t found = 0;
   ssize_t strIndex[] = { 0, -1 };
-  size_t maxIndex = data.length() - 1;
+  const size_t maxIndex = data.length() - 1;
   // TODO: assert(maxIndex <= SIZE_MAX);
 
   for (size_t i = 0; i <= maxIndex && found <= index; i++) {
