@@ -80,7 +80,7 @@ void loop() {
 
   waitForRFIDCard();
 
-  String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
+  auto currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
   currentUid.trim();
 
   if (registerUsersId.equalsIgnoreCase(currentUid)) {
@@ -93,7 +93,7 @@ void loop() {
 
   sdCardSPI();
   Serial.println("Current Uid: " + currentUid);
-  String userName = getNameFromUid(currentUid);
+  auto userName = getNameFromUid(currentUid);
   if (userName != "NOUSER") {
     Serial.println("USER FOUND");
     registerDrink(userName);
@@ -155,11 +155,11 @@ String getNameFromUid(String uid) {
   }
 
   while (users.available() != 0) {
-    String row = users.readStringUntil('\n');
+    auto row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    String userId = getValue(row, ':', 0);
+    auto userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userName = getValue(row, ':', 1);
       userName.trim();
@@ -194,11 +194,11 @@ bool doesUserNeedRegistering(String uid) {
 
   bool userInDB = true;
   while (users.available() != 0) {
-    String row = users.readStringUntil('\n');
+    auto row = users.readStringUntil('\n');
     if (row == "")
       break;
 
-    String userId = getValue(row, ':', 0);
+    auto userId = getValue(row, ':', 0);
     if (uid.equalsIgnoreCase(userId)) {
       userInDB = false;
       break;
@@ -299,7 +299,7 @@ void registerUserMode() {
     digitalWrite(LED_GREEN, HIGH);
     waitForRFIDCard();
 
-    String currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
+    auto currentUid = getUid(mfrc522.uid.uidByte, mfrc522.uid.size);
     currentUid.trim();
 
     if (registerUsersId.equalsIgnoreCase(currentUid))
