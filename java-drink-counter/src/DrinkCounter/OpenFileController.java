@@ -31,7 +31,7 @@ public class OpenFileController {
 
 
         if (selectedFile == null) {
-            responseLabel.setText("An error occured: No file selected");
+            responseLabel.setText("An error occurred: No file selected");
         } else {
             try {
                 String outputFileName = drinkCounter.createDrinklist(selectedFile);
